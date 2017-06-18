@@ -36,12 +36,11 @@ public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	EasyMock.replay(bookingService);
 
-	MutableAttributeMap input = new LocalAttributeMap();
+	MutableAttributeMap<String> input = new LocalAttributeMap<String>();
 	input.put("hotelId", "1");
 	MockExternalContext context = new MockExternalContext();
 	context.setCurrentUser("keith");
 	startFlow(input, context);
-
 	assertCurrentStateEquals("enterBookingDetails");
 	assertResponseWrittenEquals("enterBookingDetails", context);
 	assertTrue(getRequiredFlowAttribute("booking") instanceof Booking);

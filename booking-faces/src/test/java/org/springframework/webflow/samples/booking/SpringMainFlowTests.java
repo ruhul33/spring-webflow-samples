@@ -37,9 +37,10 @@ public class SpringMainFlowTests extends AbstractXmlFlowExecutionTests {
 	builderContext.getFlowBuilderServices().setConversionService(new FacesConversionService());
     }
 
-    public void unitTestStartMainFlow() {
+    public void testUnitStartMainFlow() {
 	List<Booking> bookings = new ArrayList<Booking>();
 	bookings.add(new Booking(new Hotel(), new User("Rick", "password", "Rick Donald")));
+	//assertTrue(getRequiredViewAttribute("user") instanceof User);
 	EasyMock.expect(bookingService.findBookings("Rick")).andReturn(bookings);
 	EasyMock.replay(bookingService);
 
@@ -51,14 +52,15 @@ public class SpringMainFlowTests extends AbstractXmlFlowExecutionTests {
 	assertTrue(getRequiredFlowAttribute("searchCriteria") instanceof SearchCriteria);
 	assertTrue(getRequiredViewAttribute("bookings") instanceof DataModel);
 
+
 	EasyMock.verify(bookingService);
     }
 
-    public void unitTestSearchHotels() {
+    public void testUnitSearchHotels() {
 	setCurrentState("enterSearchCriteria");
 
 	SearchCriteria criteria = new SearchCriteria();
-	criteria.setSearchString("Jason");
+	criteria.setSearchString("Ritz Carlton");
 	getFlowScope().put("searchCriteria", criteria);
 
 	MockExternalContext context = new MockExternalContext();
@@ -68,15 +70,16 @@ public class SpringMainFlowTests extends AbstractXmlFlowExecutionTests {
 	assertCurrentStateEquals("reviewHotels");
 	assertResponseWrittenEquals("reviewHotels", context);
 	assertTrue(getRequiredViewAttribute("hotels") instanceof HotelLazyDataModel);
+	assertNull(getFlowAttribute("hotels"));
     }
 
-    public void unitTestSelectHotel() {
+    public void testUnitSelectHotel() {
 	setCurrentState("reviewHotels");
 
 	List<Hotel> hotels = new ArrayList<Hotel>();
 	Hotel hotel = new Hotel();
 	hotel.setId(1L);
-	hotel.setName("Jameson Inn");
+	hotel.setName("Ritz Carlton");
 	hotels.add(hotel);
 	HotelLazyDataModel dataModel = new HotelLazyDataModel();
 	dataModel.setSelected(hotel);
@@ -87,16 +90,16 @@ public class SpringMainFlowTests extends AbstractXmlFlowExecutionTests {
 	resumeFlow(context);
 
 	assertCurrentStateEquals("reviewHotel");
-	assertNotNull(getFlowAttribute("hotels"));
+	assertNull(getFlowAttribute("hotels"));
 	assertSame(hotel, getFlowAttribute("hotel"));
     }
 
-    public void unitTestBookHotel() {
+    public void testUnitBookHotel() {
 	setCurrentState("reviewHotel");
 
 	Hotel hotel = new Hotel();
 	hotel.setId(1L);
-	hotel.setName("Jameson Inn");
+	hotel.setName("Ritz Carlton");
 	getFlowScope().put("hotel", hotel);
 
 	Flow mockBookingFlow = new Flow("booking");

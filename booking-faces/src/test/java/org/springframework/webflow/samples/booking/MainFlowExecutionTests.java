@@ -102,7 +102,7 @@ public class MainFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	Flow mockBookingFlow = new Flow("booking");
 	mockBookingFlow.setInputMapper(new Mapper() {
 	    public MappingResults map(Object source, Object target) {
-		assertEquals(new Long(1), ((AttributeMap) source).get("hotelId"));
+		assertEquals(new Long(1), ((AttributeMap<?>) source).get("hotelId"));
 		return null;
 	    }
 	});
